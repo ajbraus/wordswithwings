@@ -4,12 +4,22 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var fs = require('fs');
+var _ = require('lodash');
 
-var syllabalize = require('./node_modules/phonemenon/syllablize-through');
+var syllables;
 
-textToPhonemeStream.lineToPhoneme('testing','utf-8',function(data){
-    console.log(data);
+fs.readFile('./node_modules/phonemenon/syllable-list.json','utf-8',function(err,data){
+    syllables = _.map(data.split('\n'), function(d,i){ 
+        return d === ''? null: JSON.parse(d);
+    }).slice(0,-1);
 });
+
+// var syllabalize = require('./node_modules/phonemenon/syllablize-through');
+
+// textToPhonemeStream.lineToPhoneme('testing','utf-8',function(data){
+//     console.log(data);
+// });
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -30,6 +40,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.get('/getSyllables', function(req,res){
+    var words = req.query.words.map(function(w){ return w.toLowerCase()}),
+        result;
+
+    console.log(words);
+
+    result = _.filter(syllables,function(w){
+        var test_word = w.word.toLowerCase();
+        return words.indexOf(test_word) != -1;
+    });
+    console.log(result);
+    res.send(result);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
