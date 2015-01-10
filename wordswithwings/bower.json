@@ -1,0 +1,26 @@
+{
+  "name": "wordswithwings",
+  "version": "0.0.0",
+  "homepage": "https://github.com/ajbraus/wordswithwings",
+  "authors": [
+    "sushmit sarmah"
+  ],
+  "keywords": [
+    "angular",
+    "bootstrap"
+  ],
+  "dependencies":{
+    "angular":"*",
+    "bootstrap":"*",
+    "angularjs-indexedDB": "*"
+    },
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
