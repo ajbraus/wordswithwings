@@ -12,7 +12,10 @@
   "dependencies":{
     "angular":"*",
     "bootstrap":"*",
-    "angularjs-indexedDB": "*"
+    "angularjs-indexedDB": "*",
+    "angular-lodash": "*",
+    "lodash": "*",
+    "angular-ui-ace": "*"
     },
   "license": "MIT",
   "private": true,

@@ -10,14 +10,35 @@
 
     <div ng-app='myApp'>
         <div ng-controller='myController'>
-            <textarea ng-model='inputText'></textarea>
-            <p>{{inputText}}</p>
-            <div ng-repeat='obj in objects'>{{obj.word}}</div>
+            <!-- <textarea ng-model='inputText'></textarea> -->
+            <div ui-ace ng-model='inputText'></div>
+            <h4>Numner of lines: {{numLines}}</h4>
+            <ul>
+                <li ng-repeat="item in syllables">
+                    <h4>{{item.word}}</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Phoneme</th><th>Stress</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="obj in item.phonemes">
+                                <td>{{obj.phoneme}}</td>
+                                <td>{{obj.stress}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </li>
+            </ul>
+
         </div>
     </div>
 
-    <script type="text/javascript" src='bower_components/angular/angular.js'></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
+    <script src='bower_components/angular/angular.js'></script>
+    <script src="bower_components/angular-ui-ace/ui-ace.js"></script>    
     <script src="bower_components/angularjs-indexedDB/src/indexeddb.js"></script>
+    <script src="bower_components/lodash/dist/lodash.min.js"></script>    
+    <script src="bower_components/angular-lodash/angular-lodash.js"></script>
 
 
     <script src='javascripts/angular_editor/main-controller.js'></script>    

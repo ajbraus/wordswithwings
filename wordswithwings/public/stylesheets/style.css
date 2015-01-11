@@ -6,3 +6,8 @@ body {
 a {
   color: #00B7FF;
 }
+
+.ace_editor { 
+    height: 200px; 
+    width: 800px;
+}
