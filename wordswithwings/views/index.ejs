@@ -10,8 +10,7 @@
 
     <div ng-app='myApp'>
         <div ng-controller='myController'>
-            <!-- <textarea ng-model='inputText'></textarea> -->
-            <div ui-ace ng-model='inputText'></div>
+            <div ui-ace="{theme:'twilight'}" ng-model='inputText'></div>
             <h4>Numner of lines: {{numLines}}</h4>
             <ul>
                 <li ng-repeat="item in syllables">
@@ -33,30 +32,20 @@
         </div>
     </div>
 
+<!-- javascript library files -->
+
     <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
     <script src='bower_components/angular/angular.js'></script>
-    <script src="bower_components/angular-ui-ace/ui-ace.js"></script>    
+    <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
     <script src="bower_components/angularjs-indexedDB/src/indexeddb.js"></script>
-    <script src="bower_components/lodash/dist/lodash.min.js"></script>    
+    <script src="bower_components/lodash/dist/lodash.min.js"></script>
     <script src="bower_components/angular-lodash/angular-lodash.js"></script>
 
+<!-- angular text editor app files -->
 
-    <script src='javascripts/angular_editor/main-controller.js'></script>    
+    <script src='javascripts/angular_editor/main-controller.js'></script>
     <script src='javascripts/angular_editor/app.js'></script>  
-    <script src='javascripts/angular_editor/moduleIndexedDB.js'></script>       
+    <script src='javascripts/angular_editor/moduleIndexedDB.js'></script>
 
-    <script type="text/javascript">
-
-    // "use strict";
-
-    
-
-
-
-
-
-
-
-    </script>
   </body>
 </html>

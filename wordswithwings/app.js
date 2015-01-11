@@ -8,18 +8,13 @@ var fs = require('fs');
 var _ = require('lodash');
 
 var syllables;
-
+// read data from syllables list and store in syllables variable 
+// for later use
 fs.readFile('./node_modules/phonemenon/syllable-list.json','utf-8',function(err,data){
     syllables = _.map(data.split('\n'), function(d,i){ 
         return d === ''? null: JSON.parse(d);
-    }).slice(0,-1);
+    });
 });
-
-// var syllabalize = require('./node_modules/phonemenon/syllablize-through');
-
-// textToPhonemeStream.lineToPhoneme('testing','utf-8',function(data){
-//     console.log(data);
-// });
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -40,17 +35,25 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+
+// get syllables of unique words and send to client
 app.get('/getSyllables', function(req,res){
-    var words = req.query.words.map(function(w){ return w.toLowerCase()}),
+
+    var words = req.query.words,
         result;
 
-    console.log(words);
+    // if single word is sent it would be a string else object
+    // convert all words to lower case for easy comparison
+    words = typeof words === 'string' ? 
+                [words.toLowerCase()] : 
+                words.map(function(w){ return w.toLowerCase()})
 
+    // 
     result = _.filter(syllables,function(w){
-        var test_word = w.word.toLowerCase();
+        var test_word = w == null ? w : w.word.toLowerCase();
         return words.indexOf(test_word) != -1;
     });
-    console.log(result);
+
     res.send(result);
 });
 

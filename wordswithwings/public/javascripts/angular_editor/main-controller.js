@@ -3,38 +3,41 @@ angular.module('MainController',[])
       ['$scope','$indexedDB','$http', 
       function($scope, $indexedDB, $http){
 
+        // define variables for input text and no. of lines
         $scope.inputText = '';
         $scope.numLines = 1;
 
-        $scope.$watch(function(scope){ return scope.inputText},function(data){
+        // angular watch function for the input text
+        $scope.$watch(
 
-            if([" ","\n"].indexOf(data.slice(-2,-1)) != -1){
-                var input = data.split('\n')
-                            .map(function(d){
-                                return d.split(' ');
-                            }),
-                    uniqueWords = _.uniq(_.flatten(input)),
-                    syllables;
+            function(scope){ 
+                return scope.inputText;
+            },
 
-                $scope.numLines = input.length;
-                getSyllables(uniqueWords, function(syllables){
-                    $scope.syllables = syllables;
-                    // console.log($scope.numLines, uniqueWords, syllables);
-                });
+            function(data){
+                // get syllables only when a space or end of line has occurred
+                if( [" ","\n"].indexOf(data.slice(-2,-1)) != -1 ){
+
+                    var input = data.split('\n')
+                                .map(function(d){
+                                    return d.split(' ').slice(0,-1);
+                                }),
+                        uniqueWords = _.uniq(_.flatten(input)),
+                        syllables;
+
+                    $scope.numLines = input.length;
+
+                    // call function to get syllables of unique words from server
+                    getSyllables(uniqueWords, function(syllables){
+                        $scope.syllables = syllables;
+                    });
+                }
             }
-
-        })
-
-
-
-        // var OBJECT_STORE_NAME = 'syllables';  
-
-        /**
-         * @type {ObjectStore}
-         */
-        // var myObjectStore = $indexedDB.objectStore(OBJECT_STORE_NAME);
+        );
 
         function getSyllables(words, callback){
+            // function to get syllables from server with parameters as
+            // unique words from input text
 
             $http({method:'GET',
                    url:'/getSyllables',
@@ -43,7 +46,6 @@ angular.module('MainController',[])
             })
             .success(function(data){
 
-                // console.log(data)
                 callback(data);
 
             })
@@ -53,18 +55,4 @@ angular.module('MainController',[])
 
         }
 
-
-        // data.slice(0,5).forEach(function(d){
-        //     myObjectStore.insert(d)
-        //         .then(function(e){ console.log('inserted'); });                
-        // })
-
-        // myObjectStore.insert({"word":"!EXCLAMATION-POINT","phonemes":[{"phoneme":"EH","stress":2},{"phoneme":"K","stress":-1},{"phoneme":"S","stress":-1},{"phoneme":"K","stress":-1},{"phoneme":"L","stress":-1},{"phoneme":"AH","stress":0},{"phoneme":"M","stress":-1},{"phoneme":"EY","stress":1},{"phoneme":"SH","stress":-1},{"phoneme":"AH","stress":0},{"phoneme":"N","stress":-1},{"phoneme":"P","stress":-1},{"phoneme":"OY","stress":2},{"phoneme":"N","stress":-1},{"phoneme":"T","stress":-1}],"syllables":[["EH","K","S","K"],["L","AH"],["M","EY"],["SH","AH","N"],["P","OY","N","T"]]})
-        // .then(function(e){ console.log('inserted'); });
-
-        // myObjectStore.getAll().then(function(results) {  
-        //   // Update scope
-        //   $scope.objects = results;
-        // });        
-        // console.log($scope.inputText);
     }]);
