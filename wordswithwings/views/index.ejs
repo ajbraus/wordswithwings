@@ -1,17 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title><%= title %></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- load stylesheets -->
+    <link rel="stylesheet" type="text/css" 
+        href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <p>Text Editor  <%= title %></p>
 
     <div ng-app='myApp'>
         <div ng-controller='myController'>
-            <div ui-ace="{theme:'twilight'}" ng-model='inputText'></div>
-            <h4>Numner of lines: {{numLines}}</h4>
+            <div ng-model='inputText' 
+                 ui-ace="{theme:'twilight',
+                          mode:'javascript',
+                          onLoad: aceLoaded}">
+            </div>
+            <h4>Number of lines: {{numLines}}</h4>
             <ul>
                 <li ng-repeat="item in syllables">
                     <h4>{{item.word}}</h4>
@@ -34,9 +43,12 @@
 
 <!-- javascript library files -->
 
+    <script src='bower_components/jquery/dist/jquery.min.js'></script>
+    <script src='bower_components/bootstrap/dist/js/bootstrap.min.js'></script>
     <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
     <script src='bower_components/angular/angular.js'></script>
     <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
+    <!-- // <script src="bower_components/ace-builds/src/mode-javascript.js"></script> -->
     <script src="bower_components/angularjs-indexedDB/src/indexeddb.js"></script>
     <script src="bower_components/lodash/dist/lodash.min.js"></script>
     <script src="bower_components/angular-lodash/angular-lodash.js"></script>
