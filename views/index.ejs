@@ -17,8 +17,8 @@
         <div ng-controller='myController'>
             <div ng-model='inputText' 
                  ui-ace="{theme:'twilight',
-                          mode:'javascript',
-                          onLoad: aceLoaded}">
+                          onLoad: aceLoaded,
+                          onChange: aceChanged}">
             </div>
             <h4>Number of lines: {{numLines}}</h4>
             <ul>
@@ -45,7 +45,7 @@
 
     <script src='bower_components/jquery/dist/jquery.min.js'></script>
     <script src='bower_components/bootstrap/dist/js/bootstrap.min.js'></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
+    <script src="javascripts/ace-noconflict.js"></script>
     <script src='bower_components/angular/angular.js'></script>
     <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
     <!-- // <script src="bower_components/ace-builds/src/mode-javascript.js"></script> -->

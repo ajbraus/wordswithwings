@@ -32,6 +32,45 @@ angular.module('MainController',[])
                     // call function to get syllables of unique words from server
                     getSyllables(uniqueWords, function(syllables){
                         $scope.syllables = syllables;
+                        var phonemes = _.chain(syllables)
+                                        .pluck('phonemes')
+                                        .flatten()
+                                        .filter(function(pho){
+                                            return pho.stress != -1;
+                                        })
+                                        .value();
+
+                        var sylPerLine = _.map(input, function(d,i){
+
+                            var syl = _.chain(d)
+                                       .map(function(word){
+                                            var word_phoneme = _.filter(syllables, function(s){
+                                                return s.word.toLowerCase() === word.toLowerCase();
+                                            })[0];
+
+                                            return _.chain(word_phoneme.phonemes)
+                                                    .filter(function(pho){
+                                                        return pho.stress != -1;
+                                                    })
+                                                    .value();
+                                       })
+                                       .flatten()
+                                       .value();
+
+                            angular.element('.syllable-count-'+(i+1))
+                                .text(syl.length+' ');
+
+                            return syl;
+
+                        });
+
+                        // console.log(sylPerLine);
+
+                        // console.log(syllables);
+                        // console.log(phonemes);
+
+
+
                     });
                 }
             }
@@ -43,6 +82,13 @@ angular.module('MainController',[])
             var _session = _editor.getSession();
             var _renderer = _editor.renderer;
         };
+
+        // ace onchange function
+        $scope.aceChanged = function(e) {
+            // Options
+            // console.log(e);
+            // angular.element('.syllable-count-1').text($scope.numLines);
+        };        
 
         // define function to syllables
         function getSyllables(words, callback){
