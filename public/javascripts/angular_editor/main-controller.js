@@ -64,6 +64,26 @@ angular.module('MainController',[])
 
                         });
 
+                        var rhymes = sylPerLine.map(function(d){
+                            var stress = _.pluck(d,'stress'),
+                                even = stress
+                                        .filter(function(d,i){ return i%2 == 0})
+                                        .reduce(function(a,b){ return a+b}),
+                                odd = stress
+                                        .filter(function(d,i){ return i%2 != 0})
+                                        .reduce(function(a,b){ return a+b}),
+                                rhyme_type = '';
+
+                            // console.log(even,odd, (stress.length/2 -1), Math.abs(even-odd));
+
+                            if(Math.abs(even-odd) >= (stress.length/2 -1)){
+                                rhyme_type = 'iambic';
+                            }
+                            return {stress:stress, rhyme_type:rhyme_type};
+                        });
+
+                        console.log(rhymes);
+
                         // console.log(sylPerLine);
 
                         // console.log(syllables);
