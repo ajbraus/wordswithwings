@@ -67,12 +67,13 @@ angular.module('MainController',[])
                         var rhymes = sylPerLine.map(function(d){
                             var stress = _.pluck(d,'stress'),
                                 even = stress
-                                        .filter(function(d,i){ return i%2 == 0})
-                                        .reduce(function(a,b){ return a+b}),
+                                        .filter(function(d,i){ return i%2 == 0}),
                                 odd = stress
-                                        .filter(function(d,i){ return i%2 != 0})
-                                        .reduce(function(a,b){ return a+b}),
+                                        .filter(function(d,i){ return i%2 != 0}),
                                 rhyme_type = '';
+
+                            even = even.length > 0 ? even.reduce(function(a,b){ return a+b}) : even;
+                            odd = odd.length > 0 ? odd.reduce(function(a,b){ return a+b}) : odd;
 
                             // console.log(even,odd, (stress.length/2 -1), Math.abs(even-odd));
 
