@@ -1,3 +1,5 @@
 node_modules/*
 public/bower_components/*
 *.log
+bower_components
+node_modules

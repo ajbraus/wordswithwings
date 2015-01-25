@@ -77,6 +77,9 @@ angular.module('MainController',[])
                             even = even.length == 0? even : even.reduce(function(a,b){ return a+b});
                             odd = odd.length == 0? odd : odd.reduce(function(a,b){ return a+b});
 
+                            even = even.length > 0 ? even.reduce(function(a,b){ return a+b}) : even;
+                            odd = odd.length > 0 ? odd.reduce(function(a,b){ return a+b}) : odd;
+
                             // console.log(even,odd, (stress.length/2 -1), Math.abs(even-odd));
 
                             if(Math.abs(even-odd) >= (stress.length/2 -1)){
