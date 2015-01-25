@@ -1,5 +1,4 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -8,6 +7,30 @@ a {
 }
 
 .ace_editor { 
-    height: 200px; 
-    width: 800px;
+    height:555px;
 }
+
+table th {
+    text-align:center;
+}
+
+ul {
+    list-style: none;
+}
+
+@media (max-height: 555px) { 
+
+    .ace_editor { 
+        height:400px;
+    }
+
+}
+
+@media (min-height: 555px) and (max-height: 768px) { 
+
+    .ace_editor { 
+        height:440px;
+    }
+
+}
+

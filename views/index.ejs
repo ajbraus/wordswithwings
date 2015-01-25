@@ -10,22 +10,53 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Text Editor  <%= title %></p>
 
-    <div ng-app='myApp'>
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"><%= title %></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>  
+
+    <div class='container' ng-app='myApp'>
         <div ng-controller='myController'>
-            <div ng-model='inputText' 
-                 ui-ace="{theme:'twilight',
-                          onLoad: aceLoaded,
-                          onChange: aceChanged}">
+            <div class='row'>
+                <div class='col-sm-9 col-xs-12'>
+                    <div ng-model='inputText' 
+                         ui-ace="{theme:'twilight',
+                                  onLoad: aceLoaded,
+                                  onChange: aceChanged}">
+                    </div>
+                </div>
+                <div class='col-sm-3 col-xs-4'>
+                    <table class="table table-bordered">
+                        <tr><th colspan='2'>Meter Legend</th></tr>
+                        <tr><th>Name</th><th>Symbol</th></tr>
+                        <tr ng-repeat='meter in meterTypes'>
+                            <td>{{meter.name}}</td>
+                            <td>{{meter.symbol}}</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-            <h4>Number of lines: {{numLines}}</h4>
-            <ul>
-                <li ng-repeat="item in syllables">
-                    <h4>{{item.word}}</h4>
-                    <table>
+            <div class='row'>
+                <div ng-repeat="item in word_dicts" class="col-sm-3 col-xs-6 table-word">
+                    <table class="table table-bordered" >
                         <thead>
+                            <tr><th colspan='2'>{{item.word}}</th></tr>
                             <tr><th>Phoneme</th><th>Stress</th></tr>
                         </thead>
                         <tbody>
@@ -35,9 +66,8 @@
                             </tr>
                         </tbody>
                     </table>
-                </li>
-            </ul>
-
+                </div>
+            </div>
         </div>
     </div>
 
@@ -55,6 +85,7 @@
 
 <!-- angular text editor app files -->
 
+    <script src='javascripts/angular_editor/data-factory.js'></script>
     <script src='javascripts/angular_editor/main-controller.js'></script>
     <script src='javascripts/angular_editor/app.js'></script>  
     <script src='javascripts/angular_editor/moduleIndexedDB.js'></script>
