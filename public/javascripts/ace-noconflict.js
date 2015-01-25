@@ -13022,6 +13022,7 @@ var Gutter = function(parentEl) {
 
             cell = this.$cells[++index];
             if (!cell) {
+                // sylnode is a span element added for the syllable counts and meter - sushmit
                 cell = {element: null, textNode: null, foldWidget: null, sylNode: null};//sushmit
                 cell.element = dom.createElement("div");
                 cell.sylNode = dom.createElement("span");//sushmit
@@ -13094,9 +13095,13 @@ var Gutter = function(parentEl) {
         var gutterWidth = gutterRenderer 
             ? gutterRenderer.getWidth(session, lastLineNumber, config)
             : lastLineNumber.toString().length * config.characterWidth;
+
+        // dynamically checks the width of span element to adjust gutter width - sushmit
+        var syl_width = document.getElementsByClassName('syllable-count-1')[0]
+                        .getBoundingClientRect().width;//sushmit
         
         var padding = this.$padding || this.$computePadding();
-        gutterWidth += padding.left + padding.right;
+        gutterWidth += padding.left + padding.right + syl_width; //sushmit
         if (gutterWidth !== this.gutterWidth && !isNaN(gutterWidth)) {
             this.gutterWidth = gutterWidth;
             this.element.style.width = Math.ceil(this.gutterWidth) + "px";

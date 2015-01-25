@@ -40,8 +40,9 @@ angular.module('MainController',[])
                                         })
                                         .value();
 
+                        // for each line analyse syllables
                         var sylPerLine = _.map(input, function(d,i){
-
+                            // get syllables for each word in line
                             var syl = _.chain(d)
                                        .map(function(word){
                                             var word_phoneme = _.filter(syllables, function(s){
@@ -57,32 +58,40 @@ angular.module('MainController',[])
                                        .flatten()
                                        .value();
 
-                            angular.element('.syllable-count-'+(i+1))
-                                .text(syl.length+' ');
+                            // angular.element('.syllable-count-'+(i+1))
+                            //     .text(syl.length+' ');
 
                             return syl;
 
                         });
 
-                        var rhymes = sylPerLine.map(function(d){
+                        var meterSyl = sylPerLine.map(function(d, i){
+
                             var stress = _.pluck(d,'stress'),
                                 even = stress
-                                        .filter(function(d,i){ return i%2 == 0})
-                                        .reduce(function(a,b){ return a+b}),
+                                        .filter(function(d,i){ return i%2 == 0}),
                                 odd = stress
-                                        .filter(function(d,i){ return i%2 != 0})
-                                        .reduce(function(a,b){ return a+b}),
-                                rhyme_type = '';
+                                        .filter(function(d,i){ return i%2 != 0}),
+                                meter_type = '-';
+
+                            even = even.length == 0? even : even.reduce(function(a,b){ return a+b});
+                            odd = odd.length == 0? odd : odd.reduce(function(a,b){ return a+b});
 
                             // console.log(even,odd, (stress.length/2 -1), Math.abs(even-odd));
 
                             if(Math.abs(even-odd) >= (stress.length/2 -1)){
-                                rhyme_type = 'iambic';
+                                meter_type = 'i';
                             }
-                            return {stress:stress, rhyme_type:rhyme_type};
+
+                            // console.log(d.length+' '+meter_type+' ');
+
+                            angular.element('.syllable-count-'+(i+1))
+                                .text(d.length+' '+meter_type+' ');
+
+                            return {stress:stress, meter_type:meter_type};
                         });
 
-                        console.log(rhymes);
+                        // console.log(meterSyl);
 
                         // console.log(sylPerLine);
 
