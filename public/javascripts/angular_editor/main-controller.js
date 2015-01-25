@@ -4,11 +4,13 @@ angular.module('MainController',[])
       function($scope, $indexedDB, $http, dataFactory){
 
         // define variables for input text and no. of lines
+        // dataFactory :- ./data-factory.js
         var data = dataFactory.getData();
         $scope.numLines = 1;
         $scope.meterTypes = data.meterTypes;
         $scope.analyseInputText = dataFactory.analyseInputText;
 
+        // variable that will contain the text from editor
         $scope.inputText = '';
 
         // angular watch function for the input text
@@ -24,9 +26,7 @@ angular.module('MainController',[])
                 $scope.analyseInputText(data, function(word_dicts, numLines){
                     $scope.word_dicts = word_dicts;
                     $scope.numLines = numLines;
-                    console.log($scope.word_dicts);
                 });
-
             }
             
         );
