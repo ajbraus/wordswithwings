@@ -9,6 +9,9 @@ angular.module('MainController',[])
         $scope.numLines = 1;
         $scope.meterTypes = data.meterTypes;
         $scope.analyseInputText = dataFactory.analyseInputText;
+        $scope.ace_options = {theme:'twilight',
+                              onLoad: $scope.aceLoaded,
+                              onChange: $scope.aceChanged};
 
         // variable that will contain the text from editor
         $scope.inputText = '';
