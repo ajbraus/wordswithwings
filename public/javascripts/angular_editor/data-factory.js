@@ -42,7 +42,7 @@ angular.module('Datafactory',[])
 
     function analyseInputText(data, callback){
         // get syllables only when a space or end of line has occurred
-        if( [" ","\n"].indexOf(data.slice(-2,-1)) != -1 ){
+        // if( [" ","\n"].indexOf(data.slice(-2,-1)) != -1 ){
 
             // get each line by splitting end of line '\n'
             var input = data.split('\n')
@@ -54,7 +54,7 @@ angular.module('Datafactory',[])
             getSyllables(input, analyseWord, callback);
 
             // return syllables;
-        }
+        // }
     }
 
 // function to analyse each word in line and get syllables and meter type
@@ -128,6 +128,7 @@ angular.module('Datafactory',[])
     }
 
 // function to be used in the watch function for inputText in main-controller
+    service.analyseInputText = analyseInputText;
     service.analyseInputText = analyseInputText;
 
     return service;

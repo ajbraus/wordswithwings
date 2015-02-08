@@ -9,9 +9,6 @@ angular.module('MainController',[])
         $scope.numLines = 1;
         $scope.meterTypes = data.meterTypes;
         $scope.analyseInputText = dataFactory.analyseInputText;
-        $scope.ace_options = {theme:'twilight',
-                              onLoad: $scope.aceLoaded,
-                              onChange: $scope.aceChanged};
 
         // variable that will contain the text from editor
         $scope.inputText = '';
@@ -26,10 +23,12 @@ angular.module('MainController',[])
 
             // set what happens on change of watch variable
             function(data){
-                $scope.analyseInputText(data, function(word_dicts, numLines){
-                    $scope.word_dicts = word_dicts;
-                    $scope.numLines = numLines;
-                });
+                if( [" ","\n"].indexOf(data.slice(-2,-1)) != -1 ){
+                    $scope.analyseInputText(data, function(word_dicts, numLines){
+                        $scope.word_dicts = word_dicts;
+                        $scope.numLines = numLines;
+                    });
+                }
             }
             
         );
@@ -47,6 +46,21 @@ angular.module('MainController',[])
             // console.log(e);
             // angular.element('.syllable-count-1').text($scope.numLines);
         };        
+
+        // ace onchange function
+        $scope.acePasted = function(e) {
+            // Options
+            $scope.analyseInputText(e[0].getValue(), function(word_dicts, numLines){
+                $scope.word_dicts = word_dicts;
+                $scope.numLines = numLines;
+            });
+            // angular.element('.syllable-count-1').text($scope.numLines);
+        };        
+
+        $scope.ace_options = {theme:'twilight',
+                              onLoad: $scope.aceLoaded,
+                              onPaste: $scope.acePasted,
+                              onChange: $scope.aceChanged};        
 
 
 
