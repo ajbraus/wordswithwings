@@ -112,7 +112,7 @@ angular.module('Datafactory',[])
         even = even.length > 0 ? even.reduce(function(a,b){ return a+b}) : even;
         odd = odd.length > 0 ? odd.reduce(function(a,b){ return a+b}) : odd;
 
-        if(Math.abs(even-odd) >= (stress.length/2 -1)){
+        if(Math.abs(even-odd) >= (stress.length/2 -1) && stress.length != 0){
             meter_type = 'i';
         }
 
