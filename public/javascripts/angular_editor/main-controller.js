@@ -24,7 +24,7 @@ angular.module('MainController',[])
             // set what happens on change of watch variable
             function(data){
 
-                if( [" ","\n"].indexOf(data.slice(-1)) != -1 ){
+                if( [" ","\n"].indexOf(data.slice(-1)) != -1 || data == ""){
                     $scope.analyseInputText(data, function(word_dicts, numLines){
                         $scope.word_dicts = word_dicts;
                         $scope.numLines = numLines;
