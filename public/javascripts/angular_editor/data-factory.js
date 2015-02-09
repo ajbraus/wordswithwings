@@ -42,19 +42,17 @@ angular.module('Datafactory',[])
 
     function analyseInputText(data, callback){
         // get syllables only when a space or end of line has occurred
-        // if( [" ","\n"].indexOf(data.slice(-2,-1)) != -1 ){
 
-            // get each line by splitting end of line '\n'
-            var input = data.split('\n')
-                        .map(function(d){
-                            return d.split(' ').slice(0,-1);
-                        });
+        // get each line by splitting end of line '\n'
+        var input = data.split('\n')
+                    .map(function(d){
+                        var temp = d.split(' ');
+                        return temp[temp.length - 1] == '' ? temp.slice(0,-1) : temp;
+                    });
 
-            // call function to get syllables of unique words from server
-            getSyllables(input, analyseWord, callback);
+        // call function to get syllables of unique words from server
+        getSyllables(input, analyseWord, callback);
 
-            // return syllables;
-        // }
     }
 
 // function to analyse each word in line and get syllables and meter type
