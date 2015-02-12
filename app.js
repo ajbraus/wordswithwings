@@ -62,9 +62,12 @@ app.get('/getSyllables', function(req,res){
 
         words.forEach(function(word){
             var regex = new RegExp("^"+word+"(\\(\\d\\))?$");
-            if(test_word != null && test_word.search(regex) != -1){
-                result.push(w);
+            if(test_word != null){
+                if( test_word.search(regex) != -1){
+                    result.push(w);
+                }
             }
+            
         });
     });
 

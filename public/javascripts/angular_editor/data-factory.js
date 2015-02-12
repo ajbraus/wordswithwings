@@ -63,16 +63,29 @@ angular.module('Datafactory',[])
             // get word_dict for each word in line
             var syl = _.chain(d)
                        .map(function(word){
+                            var regex = new RegExp("^"+word.toLowerCase()+"(\\(\\d\\))?$");
                             var word_phoneme = _.filter(word_dicts, function(s){
-                                return s.word.toLowerCase() === word.toLowerCase();
-                            })[0];
+                                // return s.word.toLowerCase() === word.toLowerCase();
+                                return s.word.toLowerCase().search(regex) != -1;
+                            })
+                            .map(function(w){
+                                var temp = _.filter(w.phonemes, function(pho){
+                                            return pho.stress != -1;
+                                        });
+                                w.phonemes = temp;
+                                return w;
+                            });
+
+                            // return _.pluck(word_phoneme, phonemes);
+
+                            return word_phoneme[0].phonemes;
 
                             // filter out stress that is -1 as it means no syllable
-                            return _.filter(word_phoneme.phonemes, function(pho){
-                                        return pho.stress != -1;
-                                    });
+                            // return _.filter(word_phoneme.phonemes, function(pho){
+                            //             return pho.stress != -1;
+                            //         });
                        })
-                       .flatten()
+                       .flatten()//
                        .value();
 
             return syl;
