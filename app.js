@@ -40,7 +40,7 @@ app.use('/users', users);
 app.get('/getSyllables', function(req,res){
 
     var words = req.query.words,
-        result;
+        result = [];
 
     // if single word is sent it would be a string else object
     // convert all words to lower case for easy comparison
@@ -49,9 +49,23 @@ app.get('/getSyllables', function(req,res){
                 words.map(function(w){ return w.toLowerCase()})
 
     // 
-    result = _.filter(syllables,function(w){
+    // result = _.filter(syllables,function(w){
+    //     var test_word = w == null ? w : w.word.toLowerCase();
+
+    //     return words.indexOf(test_word) != -1;
+    // });
+
+    // var test_list = [];
+
+    syllables.forEach(function(w){
         var test_word = w == null ? w : w.word.toLowerCase();
-        return words.indexOf(test_word) != -1;
+
+        words.forEach(function(word){
+            var regex = new RegExp("^"+word+"(\\(\\d\\))?$");
+            if(test_word != null && test_word.search(regex) != -1){
+                result.push(w);
+            }
+        });
     });
 
     res.send(result);
