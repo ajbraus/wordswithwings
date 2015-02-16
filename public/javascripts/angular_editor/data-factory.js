@@ -1,6 +1,8 @@
 angular.module('Datafactory',[])
-.factory('dataFactory', function($http){
+.factory('dataFactory', function($http, socket){
     var service = {},
+        inputText,
+        getWordDicts,
         meterTypes = [{name:'Iambic', symbol:'i'},
                      {name:'Trochiaic', symbol:'t'},
                      {name:'Anapestic', symbol:'a'},
@@ -15,13 +17,31 @@ angular.module('Datafactory',[])
                      {name:'Hexameter', symbol:'hx'},
                      {name:'Heptameter', symbol:'hp'}];
 
+    // socket.on('news', function (data) {
+    //     console.log(data);
+    //     socket.emit('my other event', { my: 'data' });
+    //   });  
+    socket.on('syllables sent', function(data){
+        // console.log(data);
+        getWordDicts(data, inputText.length);
+        analyseWord(data, inputText);
+    });              
+
     // define function to syllables
     function getSyllables(input, callback, getWordDicts){
         // function to get syllables from server with parameters as
         // unique words from input text
         var words = _.uniq(_.flatten(input));
 
-        $http({method:'GET',
+        socket.emit('words sent', { words: words });
+        // socket.on('syllables sent', function(data){
+        //     // console.log(data);
+        //     getWordDicts(data, input.length);
+        //     callback(data, input);
+        // });         
+
+
+        /*$http({method:'GET',
                url:'/getSyllables',
                params:{words:words},
                dataType:'json'
@@ -36,7 +56,7 @@ angular.module('Datafactory',[])
         })
         .error(function(err){
             throw err;
-        });
+        });*/
 
     }
 
@@ -50,8 +70,13 @@ angular.module('Datafactory',[])
                         return temp[temp.length - 1] == '' ? temp.slice(0,-1) : temp;
                     });
 
+        inputText = input;
+        getWordDicts = callback;
+
+        socket.emit('words sent', { words: _.uniq(_.flatten(input)) });
+
         // call function to get syllables of unique words from server
-        getSyllables(input, analyseWord, callback);
+        // getSyllables(input, analyseWord, callback);
 
     }
 
@@ -77,8 +102,12 @@ angular.module('Datafactory',[])
                             });
 
                             // return _.pluck(word_phoneme, phonemes);
+                            if(typeof word_phoneme[0] == 'undefined'){
+                                return [{phoneme:word,stress:0}];
+                            } else {
+                                return word_phoneme[0].phonemes;
+                            }
 
-                            return word_phoneme[0].phonemes;
 
                             // filter out stress that is -1 as it means no syllable
                             // return _.filter(word_phoneme.phonemes, function(pho){

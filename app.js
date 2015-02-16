@@ -1,3 +1,4 @@
+var debug = require('debug')('wordswithwings');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -104,6 +105,50 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
+
+app.set('port', process.env.PORT || 3000);
+
+var server = app.listen(app.get('port'), function() {
+  debug('Express server listening on port ' + server.address().port);
+});
+
+var io = require('socket.io').listen(server);
+
+io.sockets.on('connection', function (socket) {
+    console.log("socket started");
+    socket.emit('news', { hello: 'world' });
+    socket.on('words sent', function (data) {
+        console.log(data.words);
+        var result = analyseWords(data.words);
+        socket.emit('syllables sent', result);
+    });
+});
+
+function analyseWords(words){
+
+    var result = [];
+
+    words = typeof words === 'string' ? 
+            [words.toLowerCase()] : 
+            words.map(function(w){ return w.toLowerCase()});
+
+    syllables.forEach(function(w){
+        var test_word = w == null ? w : w.word.toLowerCase();
+
+        words.forEach(function(word){
+            var regex = new RegExp("^"+word+"(\\(\\d\\))?$");
+            if(test_word != null){
+                if( test_word.search(regex) != -1){
+                    result.push(w);
+                }
+            }
+            
+        });
+    });
+
+    return result;
+
+}
 
 
 module.exports = app;

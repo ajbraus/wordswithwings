@@ -1,7 +1,7 @@
 angular.module('MainController',[])
     .controller('myController',
-      ['$scope','$indexedDB','$http','dataFactory', 
-      function($scope, $indexedDB, $http, dataFactory){
+      ['$scope','$indexedDB','$http','dataFactory', 'socket',
+      function($scope, $indexedDB, $http, dataFactory, socket){
 
         // define variables for input text and no. of lines
         // dataFactory :- ./data-factory.js
@@ -24,7 +24,8 @@ angular.module('MainController',[])
             // set what happens on change of watch variable
             function(data){
 
-                if( [" ","\n"].indexOf(data.slice(-1)) != -1 || data == ""){
+                // if( [" ","\n"].indexOf(data.slice(-1)) != -1 || data != ""){
+                if(data != ""){
                     $scope.analyseInputText(data, function(word_dicts, numLines){
                         $scope.word_dicts = word_dicts;
                         $scope.numLines = numLines;

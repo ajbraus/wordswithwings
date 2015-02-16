@@ -3,5 +3,12 @@ var app = angular
                 ['ui.ace',
                  'MainController',
                  'Datafactory',
+                 'btford.socket-io',
                  'ModuleIndexedDB',
-                 'angular-lodash']);
+                 'angular-lodash'])
+            .factory('socket', function (socketFactory) {
+              return socketFactory({
+                prefix: 'foo~',
+                ioSocket: io.connect()
+              });
+            });

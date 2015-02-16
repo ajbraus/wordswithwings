@@ -15,7 +15,9 @@
     "angularjs-indexedDB": "*",
     "angular-lodash": "*",
     "lodash": "*",
-    "angular-ui-ace": "*"
+    "angular-ui-ace": "*",
+    "socket.io-client":"*",
+    "angular-socket-io":"*"
     },
   "license": "MIT",
   "private": true,
