@@ -17,6 +17,23 @@ angular.module('Datafactory',[])
                      {name:'Hexameter', symbol:'hx'},
                      {name:'Heptameter', symbol:'hp'}];
 
+    function arrayCombos(arg) {
+        var r = [], 
+            max = arg.length-1;
+        function helper(arr, i) {
+            for (var j=0, l=arg[i].length; j<l; j++) {
+                var a = arr.slice(0); // clone arr
+                a.push(arg[i][j]);
+                if (i==max) {
+                    r.push(a);
+                } else
+                    helper(a, i+1);
+            }
+        }
+        helper([], 0);
+        return r;
+    }
+
     // socket.on('news', function (data) {
     //     console.log(data);
     //     socket.emit('my other event', { my: 'data' });
@@ -88,6 +105,7 @@ angular.module('Datafactory',[])
             // get word_dict for each word in line
             var syl = _.chain(d)
                        .map(function(word){
+                            // console.log(word_dicts);
                             var regex = new RegExp("^"+word.toLowerCase()+"(\\(\\d\\))?$");
                             var word_phoneme = _.filter(word_dicts, function(s){
                                 // return s.word.toLowerCase() === word.toLowerCase();
@@ -97,7 +115,9 @@ angular.module('Datafactory',[])
                                 var temp = _.filter(w.phonemes, function(pho){
                                             return pho.stress != -1;
                                         });
+
                                 w.phonemes = temp;
+                                
                                 return w;
                             });
 
@@ -105,7 +125,17 @@ angular.module('Datafactory',[])
                             if(typeof word_phoneme[0] == 'undefined'){
                                 return [{phoneme:word,stress:0}];
                             } else {
-                                return word_phoneme[0].phonemes;
+                                var pho = _.pluck(word_phoneme, 'phonemes')
+                                        .map(function(d){
+                                            // console.log(d);
+                                            return _.pluck(d,'stress');
+                                        });
+
+                                // console.log(_.pluck(word_phoneme, 'phonemes'));
+                                // console.log(pho);
+
+                                return pho;
+                                // return word_phoneme[0].phonemes;
                             }
 
 
@@ -114,28 +144,46 @@ angular.module('Datafactory',[])
                             //             return pho.stress != -1;
                             //         });
                        })
-                       .flatten()//
+                       // .flatten()//
                        .value();
 
             return syl;
 
         }); //end sylPerLine
 
+        // console.log(sylPerLine);
+
         // get the meter for each line
-        var meterSyl = sylPerLine.map(function(d, i){
+        sylPerLine.forEach(function(d, i){
+
+            // console.log(d);
 
             // get stress for each syllable in line
-            var stress = _.pluck(d,'stress'),
-                meter_type = '-';
+            var meter_type = '-',
+                new_arr = [];
+
+            d.forEach(function(arr){
+                if(arr.length == 1 && arr[0].length > 1){
+                    // console.log(arr);
+                    arr[0].forEach(function(a){
+                        // console.log(a);
+                        new_arr.push([a]);
+                    });
+                } else {
+                    new_arr.push(_.flatten(arr));
+                }
+            });
+
+            // console.log(new_arr);
 
             // check the meter type
-            meter_type = checkIambic(stress);
+            meter_type = checkIambic(new_arr);
 
             // set the gutter of editor to show the syllable count and meter type
             angular.element('.syllable-count-'+(i+1))
                 .text(d.length+' '+meter_type+' ');
 
-            return {stress:stress, meter_type:meter_type};
+            // return {stress:stress, meter_type:meter_type};
         });
 
     }
@@ -146,17 +194,30 @@ angular.module('Datafactory',[])
 //              >= half of length of all stress -1
     function checkIambic(stress){
 
-        var meter_type = '-',
-            even = stress.filter(function(d,i){ return i%2 == 0}),
-            odd = stress.filter(function(d,i){ return i%2 != 0});
+        // var stress = _.pluck(phonemes,'stress');
 
-        // use reduce on non empty array
-        even = even.length > 0 ? even.reduce(function(a,b){ return a+b}) : even;
-        odd = odd.length > 0 ? odd.reduce(function(a,b){ return a+b}) : odd;
+        // console.log(stress);
+        var allcombos = arrayCombos(stress),
+            meter_type = '-';
+        // console.log(allcombos);
+        allcombos.forEach(function(combo){
 
-        if(Math.abs(even-odd) >= (stress.length/2 -1) && stress.length != 0){
-            meter_type = 'i';
-        }
+            var even = combo.filter(function(d,i){ return i%2 == 0}),
+                odd = combo.filter(function(d,i){ return i%2 != 0});
+
+            // use reduce on non empty array
+            even = even.length > 0 ? even.reduce(function(a,b){ return a+b}) : even;
+            odd = odd.length > 0 ? odd.reduce(function(a,b){ return a+b}) : odd;
+
+            var half = combo.length/2;
+
+            if([Math.ceil(half), Math.floor(half)].indexOf(Math.abs(even-odd)) != -1 && combo.length != 0){
+                meter_type = 'i';
+                // console.log(combo);
+                return meter_type;
+            }
+
+        });
 
         return meter_type;
 
