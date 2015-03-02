@@ -202,7 +202,23 @@ angular.module('Datafactory',[])
         // console.log(allcombos);
         allcombos.forEach(function(combo){
 
-            var even = combo.filter(function(d,i){ return i%2 == 0}),
+            combo = combo.join('');
+
+            if(combo == "0101010101"){
+                meter_type = 'i';
+                return meter_type;
+            } else if(combo == "10101010"){
+                meter_type = 't';
+                return meter_type;
+            } else if(combo == "001001001"){
+                meter_type = 'a';
+                return meter_type;                
+            } else if(combo == "100100100100100100"){
+                meter_type = 'd';
+                return meter_type;                
+            }            
+
+            /*var even = combo.filter(function(d,i){ return i%2 == 0}),
                 odd = combo.filter(function(d,i){ return i%2 != 0});
 
             // use reduce on non empty array
@@ -215,7 +231,7 @@ angular.module('Datafactory',[])
                 meter_type = 'i';
                 // console.log(combo);
                 return meter_type;
-            }
+            }*/
 
         });
 
