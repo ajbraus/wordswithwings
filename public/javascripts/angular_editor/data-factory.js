@@ -151,7 +151,13 @@ angular.module('Datafactory',[])
 
         }); //end sylPerLine
 
-        // console.log(sylPerLine);
+        console.log(input);
+        var meterLines = [],
+            last_words = input.map(function(arr){
+                return arr.slice(-1)[0];
+            });
+
+        console.log(last_words);
 
         // get the meter for each line
         sylPerLine.forEach(function(d, i){
@@ -179,12 +185,24 @@ angular.module('Datafactory',[])
             // check the meter type
             meter_type = checkIambic(new_arr);
 
+            meterLines.push(meter_type);
+
             // set the gutter of editor to show the syllable count and meter type
             angular.element('.syllable-count-'+(i+1))
                 .text(d.length+' '+meter_type+' ');
 
             // return {stress:stress, meter_type:meter_type};
         });
+
+        var rhyme = sylPerLine.map(function(arr){ return arr.length}).join('-');
+
+        if(rhyme == '5-7-5'){
+            angular.element('#rhyme').text('Haiku');
+        } else if(meterLines.join('') == Array(sylPerLine.length+1).join('i')){
+            angular.element('#rhyme').text('Blank Verse');
+        } else {
+            angular.element('#rhyme').text('');
+        }   
 
     }
 
