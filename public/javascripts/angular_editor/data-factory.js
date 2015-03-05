@@ -167,13 +167,39 @@ angular.module('Datafactory',[])
                 var t = word.syllables.slice(-1)[0];
                 // console.log(t, t.slice(-1)[0], t.slice(-1)[0].search(reg_vowel));
                 t = t.slice(-1)[0].search(reg_vowel) === -1 ? t.slice(-2) : t.slice(-1);
+                // console.log(t);
                 return t;
             });
+
+            // console.log(word_phoneme);
+            var len = word_phoneme.length;
+            var word_phoneme_new = word_phoneme;
+
+            for(var i=0; i<len;i++){
+                for(var j=i+1; j<len; j++){
+                    if(angular.element(word_phoneme[i]).not(word_phoneme[j]).length === 0){
+                        word_phoneme_new.splice(i,1);
+                    }                    
+                }
+
+            }
+
+            // console.log(word_phoneme_new);
 
             return word_phoneme;
         });
 
-        // console.log(last_words);
+        // var rhyme_seq = ['A'];
+
+        // last_words.forEach(function(syls, i){
+        //     if(i > 0){
+        //         syls.forEach(function(type){
+
+        //         });
+        //     }
+        // });
+
+        console.log(last_words);
 
         // get the meter for each line
         sylPerLine.forEach(function(d, i){
