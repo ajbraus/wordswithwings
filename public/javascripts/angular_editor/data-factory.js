@@ -194,22 +194,55 @@ angular.module('Datafactory',[])
             return word_phoneme;
         });
 
-        // var rhyme_seq = ['A'];
+        var rhyme_seq = [],
+            len = last_words.length;
 
-        // last_words.forEach(function(syls, i){
-        //     if(i > 0){
-        //         syls.forEach(function(type){
+        // initiate rhymes
+        for(var i=0; i < len; i++){
+            if(i === 0){
+                rhyme_seq.push( String.fromCharCode('A'.charCodeAt(0)) );
+            } else {
+                rhyme_seq.push(String.fromCharCode(rhyme_seq[i-1].charCodeAt(0)+1));
+            }
+        }
 
-        //         });
-        //     }
-        // });
+        // check which rhymes are same
+        for(var i=0; i < len; i++){
 
-        // console.log(last_words);
+            for(var j=i+1; j < len; j++){
+
+                var break_out = false;
+
+                angular.element(last_words[j]).each(function(wj){
+                    angular.element(last_words[i]).each(function(wi){
+                        if(angular.element(last_words[j][wj]).not(last_words[i][wi]).length === 0){
+
+                            rhyme_seq[j] = rhyme_seq[i];
+                            break_out = true;
+                            return false;
+                        }  
+                    });
+                    if(break_out) return false;
+                });
+              /*  console.log(break_out);
+                if(!break_out){
+                    // console.log("####different####", rhyme_seq, i, j);
+                    // if(typeof rhyme_seq[j] === "undefined"){
+                        // console.log(rhyme_seq, rhyme_seq[i].charCodeAt(0), i);
+                        console.log("entered");
+                        rhyme_seq[j] = String.fromCharCode(rhyme_seq[i].charCodeAt(0)+1);
+                    // }
+                }*/
+            }
+        }
+
+        rhyme_seq = rhyme_seq.join('');
+
+        // console.log(rhyme_seq);
+        var seq = [];
 
         // get the meter for each line
         sylPerLine.forEach(function(d, i){
-
-            // console.log(d);
 
             // get stress for each syllable in line
             var meter_type = '-',
@@ -238,17 +271,33 @@ angular.module('Datafactory',[])
             angular.element('.syllable-count-'+(i+1))
                 .text(d.length+' '+meter_type+' ');
 
+            if(meter_type === 'i'){
+                seq.push("<div>0101010101</div>")
+            } else if(meter_type === 't'){
+                seq.push("<div>10101010</div>");
+            } else if(meter_type === 'a'){
+                seq.push("<div>001001001</div>");              
+            } else if(meter_type === 'd'){
+                seq.push("<div>100100100100100100</div>");               
+            } else {
+                var combo = arrayCombos(new_arr)[0];
+                combo = typeof combo != "undefined" ? combo.join('') : '';
+                seq.push("<div>"+combo+"</div>");  
+            }
+
             // return {stress:stress, meter_type:meter_type};
         });
+
+        angular.element("#meter").html(seq.join(''));
 
         var rhyme = sylPerLine.map(function(arr){ return arr.length}).join('-');
 
         if(rhyme == '5-7-5'){
-            angular.element('#rhyme').text('Haiku');
+            angular.element('#rhyme').text('Haiku, rhyme seq: '+rhyme_seq);
         } else if(meterLines.join('') == Array(sylPerLine.length+1).join('i')){
-            angular.element('#rhyme').text('Blank Verse');
+            angular.element('#rhyme').text('Blank Verse, rhyme seq: '+rhyme_seq);
         } else {
-            angular.element('#rhyme').text('');
+            angular.element('#rhyme').text(rhyme_seq);
         }   
 
     }
