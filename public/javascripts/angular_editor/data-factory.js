@@ -22,13 +22,15 @@ angular.module('Datafactory',[])
         var r = [], 
             max = arg.length-1;
         function helper(arr, i) {
-            for (var j=0, l=arg[i].length; j<l; j++) {
-                var a = arr.slice(0); // clone arr
-                a.push(arg[i][j]);
-                if (i==max) {
-                    r.push(a);
-                } else
-                    helper(a, i+1);
+            if(typeof arg[i] != "undefined"){
+                for (var j=0, l=arg[i].length; j<l; j++) {
+                    var a = arr.slice(0); // clone arr
+                    a.push(arg[i][j]);                    
+                    if (i==max) {
+                        r.push(a);
+                    } else
+                        helper(a, i+1);
+                }
             }
         }
         helper([], 0);
@@ -155,7 +157,10 @@ angular.module('Datafactory',[])
         var meterLines = [],
             last_words = input.map(function(arr){
                 return arr.slice(-1)[0];
-            });
+            })
+            .filter(function(w){
+                return typeof w != "undefined";
+            })
 
         // console.log(last_words);
         last_words = last_words.map(function(word){
@@ -199,7 +204,7 @@ angular.module('Datafactory',[])
         //     }
         // });
 
-        console.log(last_words);
+        // console.log(last_words);
 
         // get the meter for each line
         sylPerLine.forEach(function(d, i){
