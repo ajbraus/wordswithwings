@@ -3,6 +3,7 @@ angular.module('Datafactory',[])
     var service = {},
         inputText,
         getWordDicts,
+        reg_vowel = /[aeiouAEIOU]/,
         meterTypes = [{name:'Iambic', symbol:'i'},
                      {name:'Trochiaic', symbol:'t'},
                      {name:'Anapestic', symbol:'a'},
@@ -151,13 +152,28 @@ angular.module('Datafactory',[])
 
         }); //end sylPerLine
 
-        console.log(input);
         var meterLines = [],
             last_words = input.map(function(arr){
                 return arr.slice(-1)[0];
             });
 
-        console.log(last_words);
+        // console.log(last_words);
+        last_words = last_words.map(function(word){
+            var regex = new RegExp("^"+word.toLowerCase()+"(\\(\\d\\))?$");
+            var word_phoneme = _.filter(word_dicts, function(s){
+                return s.word.toLowerCase().search(regex) != -1;
+            })
+            .map(function(word){
+                var t = word.syllables.slice(-1)[0];
+                // console.log(t, t.slice(-1)[0], t.slice(-1)[0].search(reg_vowel));
+                t = t.slice(-1)[0].search(reg_vowel) === -1 ? t.slice(-2) : t.slice(-1);
+                return t;
+            });
+
+            return word_phoneme;
+        });
+
+        // console.log(last_words);
 
         // get the meter for each line
         sylPerLine.forEach(function(d, i){
