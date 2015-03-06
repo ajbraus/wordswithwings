@@ -281,8 +281,10 @@ angular.module('Datafactory',[])
                 seq.push("<div>100100100100100100</div>");               
             } else {
                 var combo = arrayCombos(new_arr)[0];
-                combo = typeof combo != "undefined" ? combo.join('') : '';
-                seq.push("<div>"+combo+"</div>");  
+                combo = typeof combo != "undefined" ? "<div>"+combo.join('')+"</div>" : '<div></div>';
+                if(combo.match(/^<div>\d+<\/div>$/) !== null){
+                   seq.push(combo);  
+                }
             }
 
             // return {stress:stress, meter_type:meter_type};

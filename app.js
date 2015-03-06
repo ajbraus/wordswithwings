@@ -118,7 +118,7 @@ io.sockets.on('connection', function (socket) {
     console.log("socket started");
     socket.emit('news', { hello: 'world' });
     socket.on('words sent', function (data) {
-        console.log(data.words);
+        // console.log(data.words);
         var result = analyseWords(data.words);
         socket.emit('syllables sent', result);
     });
