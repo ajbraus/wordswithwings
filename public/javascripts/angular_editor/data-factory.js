@@ -195,6 +195,7 @@ angular.module('Datafactory',[])
         });
 
         var rhyme_seq = [],
+            // max_level = 'A',
             len = last_words.length;
 
         // initiate rhymes
@@ -224,17 +225,38 @@ angular.module('Datafactory',[])
                     });
                     if(break_out) return false;
                 });
-              /*  console.log(break_out);
-                if(!break_out){
-                    // console.log("####different####", rhyme_seq, i, j);
-                    // if(typeof rhyme_seq[j] === "undefined"){
-                        // console.log(rhyme_seq, rhyme_seq[i].charCodeAt(0), i);
-                        console.log("entered");
-                        rhyme_seq[j] = String.fromCharCode(rhyme_seq[i].charCodeAt(0)+1);
-                    // }
-                }*/
+                // console.log(max_level);
+                // if(!break_out){
+                //     // console.log("####different####", rhyme_seq, i, j);
+                //     // if(typeof rhyme_seq[j] === "undefined"){
+                //         // console.log(rhyme_seq, rhyme_seq[i].charCodeAt(0), i);
+                //         // console.log("entered");
+                //         // rhyme_seq[j] = String.fromCharCode(rhyme_seq[j-1].charCodeAt(0)+1);
+                //         rhyme_seq[j] = String.fromCharCode(max_level.charCodeAt(0)+1);
+                        // max_level = _.max(rhyme_seq.slice(0,j).map(function(ch){
+                        //     return ch.charCodeAt(0);
+                        // }));
+                //         max_level = String.fromCharCode(max_level);
+                //     // }
+                // }
             }
         }
+
+        // refactor such that only sequence of alphabet used
+        rhyme_seq = rhyme_seq.map(function(ch,i){
+            if(i===0){
+                return ch;
+            } else {
+               var max_level = _.max(rhyme_seq.slice(0,i).map(function(ch){
+                            return ch.charCodeAt(0);
+                        })); 
+               if(ch.charCodeAt(0) <= max_level+1){
+                return ch;
+               } else {
+                return String.fromCharCode(max_level+1);
+               }
+            }
+        });        
 
         rhyme_seq = rhyme_seq.join('');
 
