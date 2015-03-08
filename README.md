@@ -15,8 +15,9 @@ npm install bower -g
 2. cd wordswithwings
 3. npm install
 4. bower install
-5. npm start
-6. In your browser goto url: http://localhost:3000
+5. npm run generate
+6. npm start
+7. In your browser goto url: http://localhost:3000
 
 wordswithwings python flask
 ===========================
