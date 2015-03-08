@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "generate": "cat node_modules/phonemenon/ext/cmudict.0.7a | node node_modules/phonemenon/phonemize-syllablize.js node_modules/phonemenon/syllable-list.json"
   },
   "dependencies": {
     "express": "~4.9.0",
