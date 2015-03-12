@@ -1,5 +1,6 @@
 angular.module('Datafactory',[])
 .factory('dataFactory', function($http, socket){
+
     var service = {},
         inputText,
         getWordDicts,
@@ -18,6 +19,12 @@ angular.module('Datafactory',[])
                      {name:'Hexameter', symbol:'hx'},
                      {name:'Heptameter', symbol:'hp'}];
 
+    socket.on('syllables sent', function(data){
+        // console.log(data);
+        getWordDicts(data, inputText.length);
+        analyseWord(data, inputText);
+    });                     
+
     function arrayCombos(arg) {
         var r = [], 
             max = arg.length-1;
@@ -35,50 +42,8 @@ angular.module('Datafactory',[])
         }
         helper([], 0);
         return r;
-    }
+    }            
 
-    // socket.on('news', function (data) {
-    //     console.log(data);
-    //     socket.emit('my other event', { my: 'data' });
-    //   });  
-    socket.on('syllables sent', function(data){
-        // console.log(data);
-        getWordDicts(data, inputText.length);
-        analyseWord(data, inputText);
-    });              
-
-    // define function to syllables
-    function getSyllables(input, callback, getWordDicts){
-        // function to get syllables from server with parameters as
-        // unique words from input text
-        var words = _.uniq(_.flatten(input));
-
-        socket.emit('words sent', { words: words });
-        // socket.on('syllables sent', function(data){
-        //     // console.log(data);
-        //     getWordDicts(data, input.length);
-        //     callback(data, input);
-        // });         
-
-
-        /*$http({method:'GET',
-               url:'/getSyllables',
-               params:{words:words},
-               dataType:'json'
-        })
-        .success(function(data){
-
-            // send word dicts and total number of lines to main controller
-            getWordDicts(data, input.length);
-            // returns dictionary containing word, syllables, phonemes that include stress
-            callback(data, input);
-
-        })
-        .error(function(err){
-            throw err;
-        });*/
-
-    }
 
     function analyseInputText(data, callback){
         // get syllables only when a space or end of line has occurred
@@ -106,53 +71,82 @@ angular.module('Datafactory',[])
         // for each line analyse words
         var sylPerLine = _.map(input, function(d,i){
             // get word_dict for each word in line
-            var syl = _.chain(d)
-                       .map(function(word){
-                            // console.log(word_dicts);
-                            var regex = new RegExp("^"+word.toLowerCase()+"(\\(\\d\\))?$");
-                            var word_phoneme = _.filter(word_dicts, function(s){
-                                // return s.word.toLowerCase() === word.toLowerCase();
-                                return s.word.toLowerCase().search(regex) != -1;
-                            })
-                            .map(function(w){
-                                var temp = _.filter(w.phonemes, function(pho){
-                                            return pho.stress != -1;
-                                        });
+            var syl = [];
 
-                                w.phonemes = temp;
-                                
-                                return w;
+            d.forEach(function(word){
+                // console.log(word_dicts);
+                var regex = new RegExp("^"+word.toLowerCase()+"(\\(\\d\\))?$");
+                var word_phoneme = _.filter(word_dicts, function(s){
+                    // return s.word.toLowerCase() === word.toLowerCase();
+                    return s.word.toLowerCase().search(regex) != -1;
+                })
+                .map(function(w){
+                    var temp = _.filter(w.phonemes, function(pho){
+                                return pho.stress != -1;
                             });
 
-                            // return _.pluck(word_phoneme, phonemes);
-                            if(typeof word_phoneme[0] == 'undefined'){
-                                return [{phoneme:word,stress:0}];
-                            } else {
-                                var pho = _.pluck(word_phoneme, 'phonemes')
-                                        .map(function(d){
-                                            // console.log(d);
-                                            return _.pluck(d,'stress');
-                                        });
+                    w.phonemes = temp;
+                    
+                    return w;
+                });
 
-                                // console.log(_.pluck(word_phoneme, 'phonemes'));
-                                // console.log(pho);
+                // console.log(word_phoneme)
 
-                                return pho;
-                                // return word_phoneme[0].phonemes;
-                            }
+                // return _.pluck(word_phoneme, phonemes);
+                if(typeof word_phoneme[0] == 'undefined'){
+
+                    syl.push([0]);
+
+                } else if(word_phoneme[0].phonemes.length > 1){
+
+                    var pho = _.pluck(word_phoneme, 'phonemes')
+                            .map(function(d){
+                                // console.log(d);
+                                return _.pluck(d,'stress');
+                            });
+
+                    // var word_syl = [];
+                    // console.log(pho);
+
+                    pho[0].forEach(function(ph,index){
+                        var temp = [];
+                        pho.forEach(function(w){
+                            temp.push([w[index]]);
+                        });
+                        syl.push(temp);
+                    });
+
+                    // syl.push(pho);
+
+                } else {
+
+                    var pho = _.pluck(word_phoneme, 'phonemes')
+                            .map(function(d){
+                                // console.log(d);
+                                return _.pluck(d,'stress');
+                            });
+
+                    // console.log(_.pluck(word_phoneme, 'phonemes'));
+                    // console.log(pho);
+
+                    syl.push(pho);
+                    // return word_phoneme[0].phonemes;
+                }
 
 
-                            // filter out stress that is -1 as it means no syllable
-                            // return _.filter(word_phoneme.phonemes, function(pho){
-                            //             return pho.stress != -1;
-                            //         });
-                       })
-                       // .flatten()//
-                       .value();
+                // filter out stress that is -1 as it means no syllable
+                // return _.filter(word_phoneme.phonemes, function(pho){
+                //             return pho.stress != -1;
+                //         });
+           });
+           // .flatten()//
+           // .value();
 
             return syl;
 
         }); //end sylPerLine
+
+        // console.log(sylPerLine);
 
         var meterLines = [],
             last_words = input.map(function(arr){
@@ -302,11 +296,22 @@ angular.module('Datafactory',[])
             } else if(meter_type === 'd'){
                 seq.push("<div>100100100100100100</div>");               
             } else {
-                var combo = arrayCombos(new_arr)[0];
-                combo = typeof combo != "undefined" ? "<div>"+combo.join('')+"</div>" : '<div></div>';
-                if(combo.match(/^<div>\d+<\/div>$/) !== null){
-                   seq.push(combo);  
-                }
+                var combo = arrayCombos(new_arr);
+
+                combo = combo.map(function(c){
+                    return "<li>"+c.join("")+"</li>";
+                }); 
+
+                combo = _.uniq(combo);
+
+                combo = "<ul>"+combo.join('')+"</ul>";
+
+                // combo = typeof combo != "undefined" ? "<div>"+combo.join('')+"</div>" : '<div></div>';
+
+                // if(combo.match(/^<div>\d+<\/div>$/) !== null){
+                   // seq.push(combo);  
+                // }
+                seq.push("<div>"+combo+"</div>");
             }
 
             // return {stress:stress, meter_type:meter_type};
