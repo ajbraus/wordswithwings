@@ -43,46 +43,6 @@
                     <div ng-model='inputText' 
                          ui-ace="ace_options">
                     </div>
-                </div>
-                <div class='col-lg-2 col-sm-2 col-xs-12'>
-                    <table class="table table-bordered text-center">
-                        <tr><th colspan='3'>Legend</th></tr>
-                        <tr><th>#</th><th>Name</th><th>Pattern</th></tr>
-                        <tr>
-                            <td>i</td>
-                            <td>Iambic Pentameter</td>
-                            <td>0101010101</td>
-                        </tr>
-                        <tr>
-                            <td>t</td>
-                            <td>Trochaic Tetrameter</td>
-                            <td>10101010</td>
-                        </tr>
-                        <tr>
-                            <td>a</td>
-                            <td>Anapestic Trimeter</td>
-                            <td>001001001</td>
-                        </tr>
-                        <tr>
-                            <td>d</td>
-                            <td>Dactylic Hexameter</td>
-                            <td>100100100100100100</td>
-                        </tr>                                                                        
-
-                    </table>               
-<!--                     <table class="table table-bordered">
-                        <tr><th colspan='2'>Meter Legend</th></tr>
-                        <tr><th>Name</th><th>Symbol</th></tr>
-                        <tr ng-repeat='meter in meterTypes'>
-                            <td>{{meter.name}}</td>
-                            <td>{{meter.symbol}}</td>
-                        </tr>
-                    </table> -->
-                </div>
-            </div>
-
-            <div class='row'>
-                <div class='col-xs-8 col-xs-offset-2'>
                     <table class="table table-bordered">
                         <tr><th colspan='5'>Poem Types</th></tr>
                         <tr><th>Name</th><th>Foot</th><th>Lines</th><th>Rhyme</th><th>Syllables</th></tr>
@@ -107,7 +67,7 @@
                             <td></td>
                             <td>10</td>
                         </tr>
-<!--                         <tr>
+    <!--                         <tr>
                             <td>Alexandrine</td>
                             <td>Iambic (3 ^ 3)</td>
                             <td></td>
@@ -178,21 +138,42 @@
                             <td>9</td>
                         </tr>
                     </table>
-<!--                 <div ng-repeat="item in word_dicts" class="col-sm-3 col-xs-6 table-word">
-                    <table class="table table-bordered" >
-                        <thead>
-                            <tr><th colspan='2'>{{item.word}}</th></tr>
-                            <tr><th>Phoneme</th><th>Stress</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="obj in item.phonemes">
-                                <td>{{obj.phoneme}}</td>
-                                <td>{{obj.stress}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div> -->
-            </div>
+                </div>
+                <div class='col-lg-2 col-sm-2 col-xs-12'>
+                    <table class="table table-bordered text-center">
+                        <tr><th colspan='3'>Legend</th></tr>
+                        <tr><th>#</th><th>Name</th><th>Pattern</th></tr>
+                        <tr>
+                            <td>i</td>
+                            <td>Iambic Pentameter</td>
+                            <td>0101010101</td>
+                        </tr>
+                        <tr>
+                            <td>t</td>
+                            <td>Trochaic Tetrameter</td>
+                            <td>10101010</td>
+                        </tr>
+                        <tr>
+                            <td>a</td>
+                            <td>Anapestic Trimeter</td>
+                            <td>001001001</td>
+                        </tr>
+                        <tr>
+                            <td>d</td>
+                            <td>Dactylic Hexameter</td>
+                            <td>100100100100100100</td>
+                        </tr>                                                                        
+
+                    </table>               
+<!--                     <table class="table table-bordered">
+                        <tr><th colspan='2'>Meter Legend</th></tr>
+                        <tr><th>Name</th><th>Symbol</th></tr>
+                        <tr ng-repeat='meter in meterTypes'>
+                            <td>{{meter.name}}</td>
+                            <td>{{meter.symbol}}</td>
+                        </tr>
+                    </table> -->
+                </div>
             </div>
         </div>
     </div>
