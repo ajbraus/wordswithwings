@@ -277,9 +277,14 @@ angular.module('Datafactory',[])
             });
 
             // console.log(new_arr);
+            var combo,
+                meter_combo;
 
             // check the meter type
-            meter_type = checkIambic(new_arr);
+            meter_combo = checkIambic(new_arr);
+
+            meter_type = meter_combo[0];
+            combo = meter_combo[1];
 
             meterLines.push(meter_type);
 
@@ -287,14 +292,19 @@ angular.module('Datafactory',[])
             angular.element('.syllable-count-'+(i+1))
                 .text(d.length+' '+meter_type+' ');
 
-            if(meter_type === 'i'){
-                seq.push("<div>0101010101</div>")
-            } else if(meter_type === 't'){
-                seq.push("<div>10101010</div>");
-            } else if(meter_type === 'a'){
-                seq.push("<div>001001001</div>");              
-            } else if(meter_type === 'd'){
-                seq.push("<div>100100100100100100</div>");               
+            // if(meter_type === 'I'){
+            //     seq.push("<div>0101010101</div>")
+            // } else if(meter_type === 'T'){
+            //     seq.push("<div>10101010</div>");
+            // } else if(meter_type === 'A'){
+            //     seq.push("<div>001001001</div>");              
+            // } else if(meter_type === 'D'){
+            //     seq.push("<div>100100100100100100</div>");  
+            // console.log(combo);
+            if(combo !== ''){
+
+                seq.push("<div>"+combo+"</div>");
+
             } else {
                 var combo = arrayCombos(new_arr);
 
@@ -341,13 +351,16 @@ angular.module('Datafactory',[])
 
         // console.log(stress);
         var allcombos = arrayCombos(stress),
+            combo_string = '',
             meter_type = '-';
         // console.log(allcombos);
-        allcombos.forEach(function(combo){
+        angular.element(allcombos).each(function(index){
 
-            combo = combo.join('');
+            combo = allcombos[index];
 
-            if(combo == "0101010101"){
+            // combo = combo.join('');
+
+         /*   if(combo == "0101010101"){
                 meter_type = 'i';
                 return meter_type;
             } else if(combo == "10101010"){
@@ -359,7 +372,59 @@ angular.module('Datafactory',[])
             } else if(combo == "100100100100100100"){
                 meter_type = 'd';
                 return meter_type;                
-            }            
+            }   */ 
+
+            var len = combo.length;
+
+            if(len%2 === 0){
+
+                var iambic = true,
+                    trochiaic = true;
+
+                for(var i = 0; i<len; i+=2 ){
+                    if(!(combo[i] == 0 && combo[i+1] == 1)){
+                        iambic = false;
+                    }
+                    if(!(combo[i] == 1 && combo[i+1] == 0)){
+                        trochiaic = false;
+                    }                    
+                }
+
+                if(iambic){
+                    meter_type = len == 10 ? 'I' : 'i';
+                    combo_string = combo.join('');
+                    return false;
+                } else if(trochiaic){
+                    meter_type = len == 8 ? 'T' : 't';
+                    combo_string = combo.join('');
+                    return false;
+                }
+
+            } else if(len%3 === 0){
+
+                var anapestic = true,
+                    dactylic = true;
+
+                for(var i = 0; i<len; i+=3 ){
+                    if(!(combo[i] == 0 && combo[i+1] == 0 && combo[i+1] == 1 )){
+                        anapestic = false;
+                    }
+                    if(!( combo[i] == 1 && combo[i+1] == 0 && combo[i+1] == 0 )){
+                        dactylic = false;
+                    }                    
+                } 
+
+                if(anapestic){
+                    meter_type = len == 9 ? 'A' : 'a';
+                    combo_string = combo.join('');
+                    return false;
+                } else if(dactylic){
+                    meter_type = len == 18 ? 'D' : 'd';
+                    combo_string = combo.join('');
+                    return false;
+                }                               
+
+            }  
 
             /*var even = combo.filter(function(d,i){ return i%2 == 0}),
                 odd = combo.filter(function(d,i){ return i%2 != 0});
@@ -378,7 +443,7 @@ angular.module('Datafactory',[])
 
         });
 
-        return meter_type;
+        return [meter_type,combo_string];
 
     }
 
